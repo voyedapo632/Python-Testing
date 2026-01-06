@@ -12,7 +12,8 @@ class Screen:
     def present(self):
         for y in range(self.height):
             for x in range(self.width):
-                sys.stdout.write(f"\033[{y};{x}H" + self.pixels[self.width * y + x])
+                sys.stdout.write(f"\033[{y};{x * 2 + 1}H" + self.pixels[self.width * y + x])
+                sys.stdout.write(f"\033[{y};{x * 2}H" + self.pixels[self.width * y + x])
 
     def setColor(self, color):
         self.color = color
@@ -24,7 +25,7 @@ class Screen:
         if y < 0 or y >= self.height:
             return
 
-        self.pixels[self.width * y + x] = self.color
+        self.pixels[self.width * int(y) + int(x)] = self.color
 
     def clear(self):
         for i in range(self.width * self.height):
@@ -34,6 +35,27 @@ class Screen:
         for _y in range(height):
             for _x in range(width):
                 self.putPixel(x + _x, y + _y)
-                
+
+    def drawCircle(self, x, y, radius):
+        for deg in range(360):
+            cirX = int(x + radius * math.cos(math.radians(deg)))
+            cirY = int(y + radius * math.sin(math.radians(deg)))
+            self.putPixel(cirX, cirY)
+
     def drawLine(self, x1, y1, x2, y2):
-        pass
+        dx = x2 - x1
+        dy = y2 - y1
+        len = math.sqrt(dx**2 + dy**2)
+        xi = dx / len
+        yi = dy / len
+        x, y = x1, y1
+
+        for i in range(int(len)):
+            self.putPixel(x, y)
+            x += xi
+            y += yi
+
+    def drawTriangle(self, x1, y1, x2, y2, x3, y3):
+        self.drawLine(x1, y1, x2, y2)
+        self.drawLine(x2, y2, x3, y3)
+        self.drawLine(x1, y1, x3, y3)
