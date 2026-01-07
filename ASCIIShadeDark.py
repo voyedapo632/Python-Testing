@@ -3,11 +3,14 @@ levels = [
     '▧',
     '@',
     '#',
-    '^',
     '*',
+    '+',
+    '^',
+    '~',
+    '-',
     '.',
     ' '
 ]
 
 def get(level:int):
-    return levels[level % len(levels)]
+    return levels[int(level) % len(levels)]

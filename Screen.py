@@ -42,20 +42,50 @@ class Screen:
             cirY = int(y + radius * math.sin(math.radians(deg)))
             self.putPixel(cirX, cirY)
 
-    def drawLine(self, x1, y1, x2, y2):
+    def drawLine(self, x1, y1, x2, y2, c1, c2):
         dx = x2 - x1
         dy = y2 - y1
         len = math.sqrt(dx**2 + dy**2)
-        xi = dx / len
-        yi = dy / len
+        xi = dx / (len + 1)
+        yi = dy / (len + 1)
         x, y = x1, y1
 
+        oldColor = self.color
+        dc = c2 - c1
+        ci = dc / (len + 1)
+        c = c1
+
         for i in range(int(len)):
+            self.setColor(ASCIIShadeDark.get(c))
             self.putPixel(x, y)
             x += xi
             y += yi
+            c += ci
 
-    def drawTriangle(self, x1, y1, x2, y2, x3, y3):
-        self.drawLine(x1, y1, x2, y2)
-        self.drawLine(x2, y2, x3, y3)
-        self.drawLine(x1, y1, x3, y3)
+        self.setColor(oldColor)
+
+    def drawTriangle(self, x1, y1, x2, y2, x3, y3, c1, c2, c3):
+        self.drawLine(x1, y1, x2, y2, c1, c2)
+        self.drawLine(x2, y2, x3, y3, c2, c3)
+        self.drawLine(x1, y1, x3, y3, c1, c3)
+
+    def drawFillTriangle(self, x1, y1, x2, y2, x3, y3, c1, c2, c3):
+        dx = x2 - x1
+        dy = y2 - y1
+        len = math.sqrt(dx**2 + dy**2)
+        xi = dx / (len + 1)
+        yi = dy / (len + 1)
+        x, y = x1, y1
+
+        oldColor = self.color
+        dc = c2 - c1
+        ci = dc / (len + 1)
+        c = c1
+
+        for i in range(int(len)):
+            self.drawLine(x, y, x3, y3, c, c3)
+            x += xi
+            y += yi
+            c += ci
+
+        self.setColor(oldColor)
